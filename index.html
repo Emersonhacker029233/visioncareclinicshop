@@ -3,82 +3,665 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EyeCare — Glasses Store (Demo)</title>
-  <meta name="description" content="Demo e‑commerce for eyeglasses — HTML & CSS prototype (no backend)." />
+  <title>EyeCare — Glasses Store</title>
+  <meta name="description" content="Premium eyewear and eye-care accessories for clear vision and style." />
   <style>
-    :root{--accent:#0b78d1;--muted:#667085;--bg:#f6f8fb;--card:#ffffff;--glass:#e6f2ff}
-    *{box-sizing:border-box}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;line-height:1.45;margin:0;background:var(--bg);color:#0b1220}
-    a{color:var(--accent);text-decoration:none}
-    .container{max-width:1100px;margin:32px auto;padding:20px}
-
+    :root {
+      --accent: #0b78d1;
+      --accent-dark: #095fa5;
+      --muted: #667085;
+      --muted-light: #98a2b3;
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --glass: #e6f2ff;
+      --border: #e4e7ec;
+      --success: #1dd3a7;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+      line-height: 1.45;
+      background: var(--bg);
+      color: #0b1220;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    a:hover {
+      color: var(--accent-dark);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
     /* Header */
-    header{display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#34a3ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px}
-    .brand h1{margin:0;font-size:20px}
-    nav a{margin-left:18px;font-weight:600}
-
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;margin-top:22px;align-items:center}
-    .hero-card{background:var(--card);padding:28px;border-radius:12px;box-shadow:0 6px 18px rgba(12,20,40,0.06)}
-    .hero h2{margin:0 0 8px;font-size:26px}
-    .hero p{margin:0 0 14px;color:var(--muted)}
-    .cta-row{display:flex;gap:12px}
-    .btn{background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
-    .btn.ghost{background:transparent;color:var(--accent);border:2px solid rgba(11,120,209,0.12)}
-
-    /* Product list */
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
-    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(12,20,40,0.04);display:flex;flex-direction:column}
-    .product-media{height:240px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#eef6ff,#ffffff)}
-    .product-media img{max-width:100%;max-height:100%;display:block}
-    .meta{padding:10px 6px 0}
-    .meta h3{margin:0;font-size:16px}
-    .price{color:var(--accent);font-weight:800;margin-top:6px}
-    .actions{margin-top:auto;display:flex;gap:8px;padding-top:12px}
-
-    /* Fake 360 viewer: use radio inputs to switch frames (CSS only) */
-    .viewer{position:relative;background:#fff;border-radius:10px;padding:8px}
-    .frames{display:flex;gap:6px;justify-content:center;margin-top:8px}
-    .frames label{display:block;width:48px;height:32px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid transparent}
-    .frames img{width:100%;height:100%;object-fit:cover;display:block}
-    input[type=radio]{display:none}
-    /* product images as 6 frames */
-    .frame-set{display:flex;gap:8px;align-items:center}
-    .main-frame{height:220px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-    /* When radio checked show the corresponding frame - each product has 6 radios */
-    /* Product 1 frames */
-    #p1f1:checked ~ .main .f1, #p1f2:checked ~ .main .f2, #p1f3:checked ~ .main .f3, #p1f4:checked ~ .main .f4, #p1f5:checked ~ .main .f5, #p1f6:checked ~ .main .f6{display:block}
-    .main img{display:none;width:100%;height:100%;object-fit:contain}
-
-    /* Simple details / checkout mock */
-    .detail{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .specs{background:var(--card);padding:14px;border-radius:10px}
-    .fake-form{display:flex;flex-direction:column;gap:10px}
-    .fake-form input,.fake-form select{padding:10px;border-radius:8px;border:1px solid #eef3fb}
-
-    /* Order tracking mock */
-    .tracking{display:flex;gap:12px;align-items:center}
-    .step{width:100%;background:#fff;border-radius:10px;padding:12px;box-shadow:0 6px 12px rgba(12,20,40,0.04)}
-    .step .dot{width:14px;height:14px;border-radius:50%;background:#d8e9ff;margin-right:8px;display:inline-block}
-    .step.complete .dot{background:var(--accent)}
-
-    /* Admin mock */
-    .admin{display:grid;grid-template-columns:1fr 320px;gap:18px}
-    .table{width:100%;border-collapse:collapse}
-    .table th,.table td{padding:10px;text-align:left;border-bottom:1px solid #f1f5fb}
-
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #34a3ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    
+    nav {
+      display: flex;
+      gap: 24px;
+    }
+    
+    nav a {
+      font-weight: 600;
+      position: relative;
+    }
+    
+    nav a:hover::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--accent);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 60px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    
+    .hero-content h2 {
+      font-size: 42px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    
+    .hero-content p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+    
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn:hover {
+      background: var(--accent-dark);
+    }
+    
+    .btn.ghost {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid rgba(11, 120, 209, 0.2);
+    }
+    
+    .btn.ghost:hover {
+      background: rgba(11, 120, 209, 0.05);
+    }
+    
+    .hero-image {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(12, 20, 40, 0.1);
+    }
+    
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 60px 0;
+    }
+    
+    .feature-card {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+      text-align: center;
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      color: var(--accent);
+      font-size: 24px;
+    }
+    
+    .feature-card h3 {
+      margin-bottom: 8px;
+    }
+    
+    .feature-card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    /* Product Grid */
+    .section-title {
+      font-size: 32px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+    
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(12, 20, 40, 0.1);
+    }
+    
+    .product-media {
+      height: 240px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #eef6ff, #ffffff);
+    }
+    
+    .product-media img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .card:hover .product-media img {
+      transform: scale(1.05);
+    }
+    
+    .meta {
+      padding: 20px;
+    }
+    
+    .meta h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    
+    .price {
+      color: var(--accent);
+      font-weight: 800;
+      margin-top: 6px;
+      font-size: 20px;
+    }
+    
+    .description {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 8px 0 16px;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .actions .btn {
+      flex: 1;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+    
+    /* Product Detail */
+    .product-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin: 40px 0;
+    }
+    
+    .product-gallery {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .product-gallery img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .product-info h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    .product-price {
+      font-size: 28px;
+      color: var(--accent);
+      font-weight: 800;
+      margin: 16px 0;
+    }
+    
+    .specs {
+      background: var(--bg);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    .specs ul {
+      margin: 12px 0 0 20px;
+      color: var(--muted);
+    }
+    
+    .specs li {
+      margin-bottom: 6px;
+    }
+    
+    .options-form {
+      margin-top: 24px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    
+    .form-group select, 
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+    }
+    
+    /* Checkout */
+    .checkout {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 40px;
+      margin: 40px 0;
+    }
+    
+    .checkout-form {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+    }
+    
+    .checkout-summary {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+      height: fit-content;
+    }
+    
+    .order-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .order-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    
+    .order-total {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--accent);
+    }
+    
+    /* Order Tracking */
+    .tracking {
+      margin: 40px 0;
+    }
+    
+    .tracking-steps {
+      display: flex;
+      margin: 24px 0;
+      position: relative;
+    }
+    
+    .tracking-steps::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+      z-index: 1;
+    }
+    
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .step-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .step.complete .step-icon {
+      background: var(--success);
+    }
+    
+    .step.active .step-icon {
+      background: var(--accent);
+    }
+    
+    .step-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .step-date {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    /* Orders List */
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+    
+    .orders-table th, 
+    .orders-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .orders-table th {
+      font-weight: 600;
+      color: var(--muted);
+    }
+    
+    .status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .status.processing {
+      background: rgba(11, 120, 209, 0.1);
+      color: var(--accent);
+    }
+    
+    .status.delivered {
+      background: rgba(29, 211, 167, 0.1);
+      color: var(--success);
+    }
+    
+    /* Contact */
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin: 40px 0;
+    }
+    
+    .contact-form {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+    }
+    
+    .contact-info {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+      min-height: 120px;
+      resize: vertical;
+    }
+    
     /* Footer */
-    footer{margin-top:36px;text-align:center;color:var(--muted);padding:20px}
-
+    footer {
+      background: var(--card);
+      padding: 40px 0;
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+    
+    .footer-column h3 {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    
+    .footer-column ul {
+      list-style: none;
+    }
+    
+    .footer-column li {
+      margin-bottom: 8px;
+    }
+    
+    .footer-column a {
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+    
+    .footer-column a:hover {
+      color: var(--accent);
+    }
+    
+    .copyright {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
     /* Responsive */
-    @media (max-width:980px){.hero{grid-template-columns:1fr} .grid{grid-template-columns:repeat(2,1fr)} .container{padding:12px}}
-    @media (max-width:640px){.grid{grid-template-columns:1fr} .hero .hero-card{padding:18px}}
-
-    /* Small playful touches to make it look "live" */
-    .badge{background:linear-gradient(90deg,#1dd3a7,#0bb0ff);color:white;padding:6px 8px;border-radius:999px;font-size:12px;font-weight:700}
-
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .product-detail, 
+      .checkout,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 16px;
+      }
+      
+      nav {
+        gap: 16px;
+      }
+      
+      .hero-content h2 {
+        font-size: 32px;
+      }
+      
+      .cta-row {
+        flex-direction: column;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+      
+      .tracking-steps {
+        flex-direction: column;
+        gap: 24px;
+      }
+      
+      .tracking-steps::before {
+        display: none;
+      }
+      
+      .step {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: 16px;
+      }
+      
+      .step-icon {
+        margin: 0;
+        flex-shrink: 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -87,279 +670,420 @@
       <div class="brand">
         <div class="logo">EC</div>
         <div>
-          <h1>EyeCare Store — Demo</h1>
-          <div style="color:var(--muted);font-size:13px">Eyewear & eye-care accessories — interactive prototype</div>
+          <h1>EyeCare Store</h1>
+          <p>Premium eyewear for clear vision and style</p>
         </div>
       </div>
       <nav>
         <a href="#shop">Shop</a>
-        <a href="#orders">Orders</a>
-        <a href="#admin">Admin</a>
+        <a href="#about">About</a>
+        <a href="#orders">My Orders</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
 
     <section class="hero">
-      <div class="hero-card">
+      <div class="hero-content">
         <h2>Stylish frames. Clear vision.</h2>
-        <p>Demo e‑commerce site for eyeglasses, 360-like viewer (CSS) · mock checkout · order tracking · admin demo.</p>
+        <p>Discover our collection of premium eyewear designed for comfort, style, and optimal vision. From blue-light filtering to prescription lenses, we have the perfect pair for you.</p>
         <div class="cta-row">
-          <a class="btn" href="#shop">Browse Glasses</a>
-          <a class="btn ghost" href="#admin">Open Admin</a>
-        </div>
-
-        <div style="margin-top:16px;display:flex;gap:12px;align-items:center">
-          <div class="badge">No live payments</div>
-          <div style="color:var(--muted);font-size:13px">This is a static demo — ideal for client preview.</div>
+          <a class="btn" href="#shop">Browse Collection</a>
+          <a class="btn ghost" href="#contact">Book an Eye Test</a>
         </div>
       </div>
-
-      <div>
-        <div class="hero-card" style="padding:18px;display:flex;flex-direction:column;gap:12px">
-          <strong>Featured</strong>
-          <div style="display:flex;gap:10px;align-items:center">
-            <div style="flex:1">
-              <div style="font-weight:800">Premium Blue-Light Frames</div>
-              <div style="color:var(--muted);font-size:13px">Lightweight, anti-glare lenses</div>
-              <div style="margin-top:8px;color:var(--accent);font-weight:800">Tsh 85,000</div>
-            </div>
-            <div style="width:84px;height:84px;border-radius:10px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="glasses" style="width:100%"></div>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <a class="btn" href="#product-1">View</a>
-            <a class="btn ghost" href="#contact">Ask About This</a>
-          </div>
-        </div>
-
-        <div style="margin-top:12px;text-align:center;color:var(--muted);font-size:13px">Customers like: lightweight frames · anti-blue lenses · quick delivery</div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Stylish glasses collection">
       </div>
     </section>
 
-    <!-- SHOP GRID -->
-    <section id="shop" style="margin-top:28px">
-      <h2 style="margin:0 0 10px">Shop</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">✓</div>
+        <h3>Free Delivery</h3>
+        <p>Free shipping on all orders over Tsh 50,000 within Dar es Salaam</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">↻</div>
+        <h3>Easy Returns</h3>
+        <p>30-day return policy if you're not completely satisfied</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👁️</div>
+        <h3>Eye Care Experts</h3>
+        <p>Consult with our certified optometrists for the perfect fit</p>
+      </div>
+    </div>
+
+    <section id="shop">
+      <h2 class="section-title">Our Collection</h2>
       <div class="grid">
-        <!-- Product 1: CSS-only 6-frame viewer simulation -->
         <article class="card">
-          <div class="viewer">
-            <!-- radios for frames (product1) -->
-            <input type="radio" name="p1frames" id="p1f1" checked>
-            <input type="radio" name="p1frames" id="p1f2">
-            <input type="radio" name="p1frames" id="p1f3">
-            <input type="radio" name="p1frames" id="p1f4">
-            <input type="radio" name="p1frames" id="p1f5">
-            <input type="radio" name="p1frames" id="p1f6">
-
-            <div class="main">
-              <div class="main-frame f1"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5a?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame1"></div>
-              <div class="main-frame f2"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5b?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame2"></div>
-              <div class="main-frame f3"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5c?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame3"></div>
-              <div class="main-frame f4"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5d?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame4"></div>
-              <div class="main-frame f5"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5e?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame5"></div>
-              <div class="main-frame f6"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5f?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="frame6"></div>
-            </div>
-
-            <div class="frames">
-              <label for="p1f1"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5a?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb1" alt="t1"></label>
-              <label for="p1f2"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5b?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb2" alt="t2"></label>
-              <label for="p1f3"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5c?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb3" alt="t3"></label>
-              <label for="p1f4"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5d?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb4" alt="t4"></label>
-              <label for="p1f5"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5e?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb5" alt="t5"></label>
-              <label for="p1f6"><img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5f?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=thumb6" alt="t6"></label>
-            </div>
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Classic Rimless Glasses">
           </div>
-
           <div class="meta">
             <h3>Classic Rimless — BlueLight</h3>
             <div class="price">Tsh 85,000</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Lightweight titanium, anti-glare coating</div>
+            <div class="description">Lightweight titanium, anti-glare coating</div>
             <div class="actions">
-              <a class="btn" href="#product-1">View</a>
-              <a class="btn ghost" href="#checkout">Buy (Mock)</a>
+              <a class="btn" href="#product-1">View Details</a>
+              <a class="btn ghost" href="#checkout">Add to Cart</a>
             </div>
           </div>
         </article>
 
-        <!-- Product 2 -->
         <article class="card">
-          <div class="product-media"><img src="https://images.unsplash.com/photo-1518546305926-9c184f5d7c1a?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="sunglasses"></div>
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Polarized Sunglasses">
+          </div>
           <div class="meta">
             <h3>Polarized SunShield</h3>
             <div class="price">Tsh 120,000</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Polarized lenses, UV400 protection</div>
-            <div class="actions"><a class="btn" href="#product-2">View</a><a class="btn ghost" href="#checkout">Buy</a></div>
+            <div class="description">Polarized lenses, UV400 protection</div>
+            <div class="actions">
+              <a class="btn" href="#product-2">View Details</a>
+              <a class="btn ghost" href="#checkout">Add to Cart</a>
+            </div>
           </div>
         </article>
 
-        <!-- Product 3 -->
         <article class="card">
-          <div class="product-media"><img src="https://images.unsplash.com/photo-1552692474-3f0450d8b7d2?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="reading-glasses"></div>
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Reading Glasses">
+          </div>
           <div class="meta">
             <h3>Reading Pro — Lightweight</h3>
             <div class="price">Tsh 55,000</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Multi-focus lenses</div>
-            <div class="actions"><a class="btn" href="#product-3">View</a><a class="btn ghost" href="#checkout">Buy</a></div>
+            <div class="description">Multi-focus lenses for comfortable reading</div>
+            <div class="actions">
+              <a class="btn" href="#product-3">View Details</a>
+              <a class="btn ghost" href="#checkout">Add to Cart</a>
+            </div>
           </div>
         </article>
 
-      </div>
-    </section>
-
-    <!-- PRODUCT DETAIL MOCK -->
-    <section id="product-1" style="margin-top:28px">
-      <h2>Product — Classic Rimless</h2>
-      <div class="hero-card detail">
-        <div>
-          <div class="main-frame" style="height:340px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#f8fbff,#ffffff);display:flex;align-items:center;justify-content:center">
-            <img src="https://images.unsplash.com/photo-1549032305-3f7a5b6b4b5a?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="classic" style="max-height:100%;max-width:100%">
+        <article class="card">
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Designer Frames">
           </div>
-        </div>
-        <div>
-          <div style="font-size:20px;font-weight:800">Classic Rimless — BlueLight</div>
-          <div style="color:var(--muted);margin-top:6px">Model: EC-CL-01 · SKU: 1001</div>
-          <div style="color:var(--accent);font-weight:800;margin-top:10px">Tsh 85,000</div>
-
-          <div class="specs" style="margin-top:12px">
-            <strong>Details</strong>
-            <ul style="margin:8px 0 0 18px;color:var(--muted)">
-              <li>Lightweight titanium frame</li>
-              <li>Blue‑light filter option</li>
-              <li>Anti‑scratch coating</li>
-            </ul>
-          </div>
-
-          <div style="margin-top:12px">
-            <form class="fake-form" action="#checkout" method="get">
-              <label>Lens option</label>
-              <select name="lens"><option>Standard (no extra)</option><option>Anti‑blue (+Tsh 12,000)</option><option>Progressive (+Tsh 35,000)</option></select>
-              <label>Quantity</label>
-              <select name="qty"><option>1</option><option>2</option><option>3</option></select>
-              <button class="btn" type="submit">Proceed to Checkout (Mock)</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MOCK CHECKOUT -->
-    <section id="checkout" style="margin-top:28px">
-      <h2>Checkout (Mock)</h2>
-      <div class="hero-card">
-        <div style="display:flex;gap:18px;flex-wrap:wrap">
-          <div style="flex:1;min-width:260px">
-            <strong>Shipping details</strong>
-            <form class="fake-form" action="#order-placed" method="get">
-              <input name="name" placeholder="Full name (e.g. John Mwakyusa)" required>
-              <input name="phone" placeholder="Phone (e.g. 07xxxx)" required>
-              <input name="address" placeholder="Delivery address" required>
-              <select name="city"><option>Dar es Salaam</option><option>Arusha</option><option>Mwanza</option></select>
-              <button class="btn" type="submit">Place Order (Mock)</button>
-            </form>
-          </div>
-
-          <div style="width:320px;background:#fbfdff;padding:12px;border-radius:10px">
-            <strong>Order summary</strong>
-            <div style="margin-top:8px;color:var(--muted)">1 × Classic Rimless</div>
-            <div style="margin-top:12px;font-weight:800;color:var(--accent)">Total — Tsh 85,000</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:10px">Payment will be collected on delivery in this demo (mock).</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ORDER PLACED / TRACKING MOCK -->
-    <section id="order-placed" style="margin-top:28px">
-      <h2>Order #EC000137 (Mock)</h2>
-      <div class="hero-card">
-        <div style="display:flex;gap:18px;flex-wrap:wrap">
-          <div style="flex:1;min-width:260px">
-            <strong>Tracking</strong>
-            <div class="tracking" style="margin-top:12px">
-              <div class="step complete"><span class="dot"></span><strong>Order received</strong><div style="color:var(--muted);font-size:13px">2025-10-03</div></div>
-              <div class="step"><span class="dot"></span><strong>Packed</strong><div style="color:var(--muted);font-size:13px">—</div></div>
-              <div class="step"><span class="dot"></span><strong>Shipped</strong><div style="color:var(--muted);font-size:13px">—</div></div>
-              <div class="step"><span class="dot"></span><strong>Delivered</strong><div style="color:var(--muted);font-size:13px">—</div></div>
+          <div class="meta">
+            <h3>Designer Frames — Premium</h3>
+            <div class="price">Tsh 145,000</div>
+            <div class="description">Luxury frames with scratch-resistant lenses</div>
+            <div class="actions">
+              <a class="btn" href="#product-4">View Details</a>
+              <a class="btn ghost" href="#checkout">Add to Cart</a>
             </div>
-
-            <div style="margin-top:12px;color:var(--muted);font-size:13px">You can paste the tracking number to the carrier website. This demo simulates status updates to show the UI.</div>
           </div>
+        </article>
+      </div>
+    </section>
 
-          <div style="width:320px;background:#fff;padding:12px;border-radius:10px">
-            <strong>Customer</strong>
-            <div style="margin-top:8px">John Mwakyusa</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Phone: 07xxxxxxxx</div>
-            <div style="margin-top:10px"><a href="#orders">View my orders</a></div>
+    <section id="product-1" class="product-detail">
+      <div class="product-gallery">
+        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Classic Rimless Glasses">
+      </div>
+      <div class="product-info">
+        <h1>Classic Rimless — BlueLight</h1>
+        <div class="product-price">Tsh 85,000</div>
+        <p>Experience ultimate comfort with our lightweight titanium frames featuring blue-light filtering technology to reduce digital eye strain.</p>
+        
+        <div class="specs">
+          <h3>Product Details</h3>
+          <ul>
+            <li>Lightweight titanium frame</li>
+            <li>Blue-light filter technology</li>
+            <li>Anti-scratch and anti-glare coating</li>
+            <li>Adjustable nose pads for perfect fit</li>
+            <li>Available in multiple sizes</li>
+          </ul>
+        </div>
+        
+        <form class="options-form" action="#checkout" method="get">
+          <div class="form-group">
+            <label for="lens">Lens Option</label>
+            <select id="lens" name="lens">
+              <option value="standard">Standard (no extra cost)</option>
+              <option value="blue-light">Anti-blue Light (+Tsh 12,000)</option>
+              <option value="progressive">Progressive (+Tsh 35,000)</option>
+            </select>
           </div>
+          
+          <div class="form-group">
+            <label for="qty">Quantity</label>
+            <select id="qty" name="qty">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          
+          <button class="btn" type="submit">Add to Cart</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="checkout" class="checkout">
+      <div class="checkout-form">
+        <h2>Checkout</h2>
+        <form action="#order-placed" method="get">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="John Mwakyusa" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="07xxxxxxxx" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Delivery Address</label>
+            <input type="text" id="address" name="address" placeholder="Street address, area" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="city">City</label>
+            <select id="city" name="city">
+              <option value="dar-es-salaam">Dar es Salaam</option>
+              <option value="arusha">Arusha</option>
+              <option value="mwanza">Mwanza</option>
+              <option value="dodoma">Dodoma</option>
+              <option value="mbeya">Mbeya</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="payment">Payment Method</label>
+            <select id="payment" name="payment">
+              <option value="cash">Cash on Delivery</option>
+              <option value="card">Credit/Debit Card</option>
+              <option value="mobile">Mobile Payment (Tigo Pesa, M-Pesa)</option>
+            </select>
+          </div>
+          
+          <button class="btn" type="submit">Place Order</button>
+        </form>
+      </div>
+      
+      <div class="checkout-summary">
+        <h3>Order Summary</h3>
+        
+        <div class="order-item">
+          <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Classic Rimless">
+          <div>
+            <div><strong>Classic Rimless — BlueLight</strong></div>
+            <div>Qty: 1</div>
+            <div>Tsh 85,000</div>
+          </div>
+        </div>
+        
+        <div class="order-total">
+          Total: Tsh 85,000
+        </div>
+        
+        <div style="margin-top: 16px; font-size: 14px; color: var(--muted);">
+          <p>Free delivery within Dar es Salaam for orders over Tsh 50,000</p>
         </div>
       </div>
     </section>
 
-    <!-- ORDERS & ACCOUNT MOCK -->
-    <section id="orders" style="margin-top:28px">
-      <h2>Your Orders (Demo)</h2>
-      <div class="hero-card">
-        <table class="table">
-          <thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
-          <tbody>
-            <tr><td>#EC000137</td><td>2025-10-03</td><td style="color:var(--accent)">Processing</td><td>Tsh 85,000</td></tr>
-            <tr><td>#EC000122</td><td>2025-09-20</td><td>Delivered</td><td>Tsh 120,000</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ADMIN MOCK -->
-    <section id="admin" style="margin-top:28px">
-      <h2>Admin Dashboard (Demo)</h2>
-      <div class="admin">
-        <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(12,20,40,0.04)}">
-          <strong>Orders</strong>
-          <table class="table" style="margin-top:10px">
-            <thead><tr><th>Order</th><th>Customer</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>#EC000137</td><td>John Mwakyusa</td><td>Processing</td></tr>
-              <tr><td>#EC000122</td><td>Asha M.</td><td>Delivered</td></tr>
-            </tbody>
-          </table>
+    <section id="order-placed" class="tracking">
+      <h2 class="section-title">Order #EC000137</h2>
+      
+      <div class="tracking-steps">
+        <div class="step complete">
+          <div class="step-icon">1</div>
+          <div>
+            <div class="step-label">Order Received</div>
+            <div class="step-date">2025-10-03</div>
+          </div>
         </div>
-
-        <aside style="background:var(--card);padding:12px;border-radius:10px">
-          <strong>Quick actions</strong>
-          <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
-            <button class="btn">Add product</button>
-            <button class="btn ghost">Update order</button>
-            <button class="btn ghost">Export CSV</button>
+        
+        <div class="step active">
+          <div class="step-icon">2</div>
+          <div>
+            <div class="step-label">Processing</div>
+            <div class="step-date">Expected: 2025-10-04</div>
           </div>
-        </aside>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">3</div>
+          <div>
+            <div class="step-label">Shipped</div>
+            <div class="step-date">—</div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">4</div>
+          <div>
+            <div class="step-label">Delivered</div>
+            <div class="step-date">—</div>
+          </div>
+        </div>
       </div>
-      <div style="margin-top:12px;color:var(--muted);font-size:13px">This admin panel is a static mock — buttons do not call a real backend in this demo.</div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px;">
+        <div>
+          <h3>Shipping Details</h3>
+          <p><strong>John Mwakyusa</strong><br>
+          07xxxxxxxx<br>
+          Goba Road area, Dar es Salaam</p>
+        </div>
+        
+        <div>
+          <h3>Order Details</h3>
+          <p><strong>Items:</strong> 1 × Classic Rimless — BlueLight<br>
+          <strong>Total:</strong> Tsh 85,000<br>
+          <strong>Payment:</strong> Cash on Delivery</p>
+        </div>
+      </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" style="margin-top:28px">
-      <h2>Contact</h2>
-      <div class="hero-card">
-        <div style="display:flex;gap:18px;flex-wrap:wrap">
-          <form class="fake-form" style="flex:1;min-width:240px">
-            <input placeholder="Your name">
-            <input placeholder="Email">
-            <textarea placeholder="Message (e.g. I want a sample quotation)" style="min-height:100px;padding:10px;border-radius:8px;border:1px solid #eef3fb"></textarea>
-            <button class="btn" type="button">Send (Mock)</button>
-          </form>
+    <section id="orders">
+      <h2 class="section-title">Your Orders</h2>
+      
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#order-placed">#EC000137</a></td>
+            <td>2025-10-03</td>
+            <td>Classic Rimless — BlueLight</td>
+            <td><span class="status processing">Processing</span></td>
+            <td>Tsh 85,000</td>
+          </tr>
+          <tr>
+            <td><a href="#order-placed">#EC000122</a></td>
+            <td>2025-09-20</td>
+            <td>Polarized SunShield</td>
+            <td><span class="status delivered">Delivered</span></td>
+            <td>Tsh 120,000</td>
+          </tr>
+          <tr>
+            <td><a href="#order-placed">#EC000098</a></td>
+            <td>2025-08-15</td>
+            <td>Reading Pro — Lightweight</td>
+            <td><span class="status delivered">Delivered</span></td>
+            <td>Tsh 55,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-          <div style="width:320px;background:#fff;padding:12px;border-radius:10px">
-            <strong>Visit Us</strong>
-            <div style="margin-top:8px;color:var(--muted)">Goba Road area, Dar es Salaam (demo)</div>
-            <div style="margin-top:10px">Phone: 07xxxxxxx</div>
+    <section id="contact" class="contact">
+      <div class="contact-form">
+        <h2>Contact Us</h2>
+        <form>
+          <div class="form-group">
+            <label for="contact-name">Your Name</label>
+            <input type="text" id="contact-name" name="contact-name" placeholder="John Mwakyusa" required>
           </div>
+          
+          <div class="form-group">
+            <label for="contact-email">Email Address</label>
+            <input type="email" id="contact-email" name="contact-email" placeholder="your.email@example.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="contact-phone">Phone Number</label>
+            <input type="tel" id="contact-phone" name="contact-phone" placeholder="07xxxxxxxx">
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="How can we help you?"></textarea>
+          </div>
+          
+          <button class="btn" type="submit">Send Message</button>
+        </form>
+      </div>
+      
+      <div class="contact-info">
+        <h2>Visit Our Store</h2>
+        <p><strong>EyeCare Store</strong><br>
+        Goba Road Area<br>
+        Dar es Salaam, Tanzania</p>
+        
+        <div style="margin-top: 20px;">
+          <p><strong>Phone:</strong> 07xxxxxxxx<br>
+          <strong>Email:</strong> info@eyecare.co.tz</p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <h3>Store Hours</h3>
+          <p>Monday - Friday: 9:00 AM - 7:00 PM<br>
+          Saturday: 9:00 AM - 5:00 PM<br>
+          Sunday: 10:00 AM - 3:00 PM</p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <h3>Book an Eye Test</h3>
+          <p>Our certified optometrists are available for comprehensive eye examinations. Call to schedule an appointment.</p>
+          <a class="btn" href="tel:07xxxxxxxx" style="margin-top: 10px;">Call to Book</a>
         </div>
       </div>
     </section>
 
     <footer>
-      EyeCare Store — Prototype • HTML & CSS demo — For production the prototype requires JavaScript and backend integration (payments, storage, tracking).
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>EyeCare Store</h3>
+          <p>Premium eyewear for clear vision and style. We're committed to providing quality glasses with excellent customer service.</p>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Shop</h3>
+          <ul>
+            <li><a href="#shop">All Glasses</a></li>
+            <li><a href="#shop">Prescription Glasses</a></li>
+            <li><a href="#shop">Sunglasses</a></li>
+            <li><a href="#shop">Reading Glasses</a></li>
+            <li><a href="#shop">Blue Light Glasses</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Customer Service</h3>
+          <ul>
+            <li><a href="#contact">Contact Us</a></li>
+            <li><a href="#orders">Order Tracking</a></li>
+            <li><a href="#contact">Book Eye Test</a></li>
+            <li><a href="#contact">Returns & Exchanges</a></li>
+            <li><a href="#contact">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Connect With Us</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2025 EyeCare Store. All rights reserved.
+      </div>
     </footer>
-
   </div>
 </body>
 </html>
