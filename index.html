@@ -1,1089 +1,1455 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EyeCare — Glasses Store</title>
-  <meta name="description" content="Premium eyewear and eye-care accessories for clear vision and style." />
-  <style>
-    :root {
-      --accent: #0b78d1;
-      --accent-dark: #095fa5;
-      --muted: #667085;
-      --muted-light: #98a2b3;
-      --bg: #f6f8fb;
-      --card: #ffffff;
-      --glass: #e6f2ff;
-      --border: #e4e7ec;
-      --success: #1dd3a7;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
-      line-height: 1.45;
-      background: var(--bg);
-      color: #0b1220;
-    }
-    
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    
-    a:hover {
-      color: var(--accent-dark);
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    
-    /* Header */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    
-    .logo {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), #34a3ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 18px;
-    }
-    
-    .brand h1 {
-      margin: 0;
-      font-size: 20px;
-    }
-    
-    .brand p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    
-    nav {
-      display: flex;
-      gap: 24px;
-    }
-    
-    nav a {
-      font-weight: 600;
-      position: relative;
-    }
-    
-    nav a:hover::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: var(--accent);
-    }
-    
-    /* Hero Section */
-    .hero {
-      padding: 60px 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-    }
-    
-    .hero-content h2 {
-      font-size: 42px;
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-    
-    .hero-content p {
-      font-size: 18px;
-      color: var(--muted);
-      margin-bottom: 30px;
-    }
-    
-    .cta-row {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    
-    .btn {
-      background: var(--accent);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .btn:hover {
-      background: var(--accent-dark);
-    }
-    
-    .btn.ghost {
-      background: transparent;
-      color: var(--accent);
-      border: 2px solid rgba(11, 120, 209, 0.2);
-    }
-    
-    .btn.ghost:hover {
-      background: rgba(11, 120, 209, 0.05);
-    }
-    
-    .hero-image {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(12, 20, 40, 0.1);
-    }
-    
-    .hero-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    
-    /* Features */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin: 60px 0;
-    }
-    
-    .feature-card {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-      text-align: center;
-    }
-    
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--glass);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      color: var(--accent);
-      font-size: 24px;
-    }
-    
-    .feature-card h3 {
-      margin-bottom: 8px;
-    }
-    
-    .feature-card p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-    
-    /* Product Grid */
-    .section-title {
-      font-size: 32px;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-    
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-      margin: 40px 0;
-    }
-    
-    .card {
-      background: var(--card);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(12, 20, 40, 0.1);
-    }
-    
-    .product-media {
-      height: 240px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(180deg, #eef6ff, #ffffff);
-    }
-    
-    .product-media img {
-      max-width: 100%;
-      max-height: 100%;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-    
-    .card:hover .product-media img {
-      transform: scale(1.05);
-    }
-    
-    .meta {
-      padding: 20px;
-    }
-    
-    .meta h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-    
-    .price {
-      color: var(--accent);
-      font-weight: 800;
-      margin-top: 6px;
-      font-size: 20px;
-    }
-    
-    .description {
-      color: var(--muted);
-      font-size: 14px;
-      margin: 8px 0 16px;
-    }
-    
-    .actions {
-      display: flex;
-      gap: 8px;
-    }
-    
-    .actions .btn {
-      flex: 1;
-      padding: 10px 16px;
-      font-size: 14px;
-    }
-    
-    /* Product Detail */
-    .product-detail {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin: 40px 0;
-    }
-    
-    .product-gallery {
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    
-    .product-gallery img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    
-    .product-info h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-    
-    .product-price {
-      font-size: 28px;
-      color: var(--accent);
-      font-weight: 800;
-      margin: 16px 0;
-    }
-    
-    .specs {
-      background: var(--bg);
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px 0;
-    }
-    
-    .specs ul {
-      margin: 12px 0 0 20px;
-      color: var(--muted);
-    }
-    
-    .specs li {
-      margin-bottom: 6px;
-    }
-    
-    .options-form {
-      margin-top: 24px;
-    }
-    
-    .form-group {
-      margin-bottom: 16px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-    
-    .form-group select, 
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-family: inherit;
-    }
-    
-    /* Checkout */
-    .checkout {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 40px;
-      margin: 40px 0;
-    }
-    
-    .checkout-form {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-    }
-    
-    .checkout-summary {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-      height: fit-content;
-    }
-    
-    .order-item {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .order-item img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    
-    .order-total {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--accent);
-    }
-    
-    /* Order Tracking */
-    .tracking {
-      margin: 40px 0;
-    }
-    
-    .tracking-steps {
-      display: flex;
-      margin: 24px 0;
-      position: relative;
-    }
-    
-    .tracking-steps::before {
-      content: '';
-      position: absolute;
-      top: 16px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--border);
-      z-index: 1;
-    }
-    
-    .step {
-      flex: 1;
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-    
-    .step-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-      color: white;
-      font-weight: bold;
-    }
-    
-    .step.complete .step-icon {
-      background: var(--success);
-    }
-    
-    .step.active .step-icon {
-      background: var(--accent);
-    }
-    
-    .step-label {
-      font-size: 14px;
-      font-weight: 600;
-    }
-    
-    .step-date {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    
-    /* Orders List */
-    .orders-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 24px 0;
-    }
-    
-    .orders-table th, 
-    .orders-table td {
-      padding: 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .orders-table th {
-      font-weight: 600;
-      color: var(--muted);
-    }
-    
-    .status {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    
-    .status.processing {
-      background: rgba(11, 120, 209, 0.1);
-      color: var(--accent);
-    }
-    
-    .status.delivered {
-      background: rgba(29, 211, 167, 0.1);
-      color: var(--success);
-    }
-    
-    /* Contact */
-    .contact {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin: 40px 0;
-    }
-    
-    .contact-form {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-    }
-    
-    .contact-info {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-    }
-    
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-family: inherit;
-      min-height: 120px;
-      resize: vertical;
-    }
-    
-    /* Footer */
-    footer {
-      background: var(--card);
-      padding: 40px 0;
-      margin-top: 60px;
-      border-top: 1px solid var(--border);
-    }
-    
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 30px;
-    }
-    
-    .footer-column h3 {
-      margin-bottom: 16px;
-      font-size: 18px;
-    }
-    
-    .footer-column ul {
-      list-style: none;
-    }
-    
-    .footer-column li {
-      margin-bottom: 8px;
-    }
-    
-    .footer-column a {
-      color: var(--muted);
-      transition: color 0.2s ease;
-    }
-    
-    .footer-column a:hover {
-      color: var(--accent);
-    }
-    
-    .copyright {
-      text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 14px;
-    }
-    
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      
-      .features {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .product-detail, 
-      .checkout,
-      .contact {
-        grid-template-columns: 1fr;
-      }
-      
-      .footer-content {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 16px;
-      }
-      
-      nav {
-        gap: 16px;
-      }
-      
-      .hero-content h2 {
-        font-size: 32px;
-      }
-      
-      .cta-row {
-        flex-direction: column;
-      }
-      
-      .features {
-        grid-template-columns: 1fr;
-      }
-      
-      .tracking-steps {
-        flex-direction: column;
-        gap: 24px;
-      }
-      
-      .tracking-steps::before {
-        display: none;
-      }
-      
-      .step {
-        display: flex;
-        align-items: center;
-        text-align: left;
-        gap: 16px;
-      }
-      
-      .step-icon {
-        margin: 0;
-        flex-shrink: 0;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        padding: 0 16px;
-      }
-      
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .footer-content {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeCare — Premium Eyewear Store</title>
+    <style>
+        :root {
+            --accent: #0b78d1;
+            --accent-dark: #095fa5;
+            --muted: #667085;
+            --muted-light: #98a2b3;
+            --bg: #f6f8fb;
+            --card: #ffffff;
+            --glass: #e6f2ff;
+            --border: #e4e7ec;
+            --success: #1dd3a7;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+            line-height: 1.45;
+            background: var(--bg);
+            color: #0b1220;
+        }
+        
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        a:hover {
+            color: var(--accent-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #34a3ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .brand h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .brand p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+        
+        nav a {
+            font-weight: 600;
+            position: relative;
+        }
+        
+        nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .hero-content h2 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+        
+        .cta-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .btn.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid rgba(11, 120, 209, 0.2);
+        }
+        
+        .btn.ghost:hover {
+            background: rgba(11, 120, 209, 0.05);
+        }
+        
+        .hero-image {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(12, 20, 40, 0.1);
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--accent);
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 8px;
+        }
+        
+        .feature-card p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        
+        /* Product Grid */
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(12, 20, 40, 0.1);
+        }
+        
+        .product-media {
+            height: 240px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #eef6ff, #ffffff);
+            position: relative;
+        }
+        
+        .product-media img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover .product-media img {
+            transform: scale(1.05);
+        }
+        
+        .meta {
+            padding: 20px;
+        }
+        
+        .meta h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+        
+        .price {
+            color: var(--accent);
+            font-weight: 800;
+            margin-top: 6px;
+            font-size: 20px;
+        }
+        
+        .description {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 8px 0 16px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .actions .btn {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+        
+        /* Product Detail */
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .product-gallery {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .product-gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .product-info h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .product-price {
+            font-size: 28px;
+            color: var(--accent);
+            font-weight: 800;
+            margin: 16px 0;
+        }
+        
+        .specs {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .specs ul {
+            margin: 12px 0 0 20px;
+            color: var(--muted);
+        }
+        
+        .specs li {
+            margin-bottom: 6px;
+        }
+        
+        .options-form {
+            margin-top: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        
+        .form-group select, 
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+        }
+        
+        /* 360° Viewer */
+        .viewer-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #f8fbff, #ffffff);
+            margin-bottom: 20px;
+        }
+        
+        .viewer-canvas {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .viewer-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .viewer-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .viewer-thumbs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .viewer-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s ease;
+        }
+        
+        .viewer-thumb.active {
+            border-color: var(--accent);
+        }
+        
+        .viewer-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Checkout */
+        .checkout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .checkout-form {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+        }
+        
+        .checkout-summary {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+            height: fit-content;
+        }
+        
+        .order-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .order-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .order-total {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        /* Order Tracking */
+        .tracking {
+            margin: 40px 0;
+        }
+        
+        .tracking-steps {
+            display: flex;
+            margin: 24px 0;
+            position: relative;
+        }
+        
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .step.complete .step-icon {
+            background: var(--success);
+        }
+        
+        .step.active .step-icon {
+            background: var(--accent);
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .step-date {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        
+        /* Orders List */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+        }
+        
+        .orders-table th, 
+        .orders-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .orders-table th {
+            font-weight: 600;
+            color: var(--muted);
+        }
+        
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status.processing {
+            background: rgba(11, 120, 209, 0.1);
+            color: var(--accent);
+        }
+        
+        .status.shipped {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .status.delivered {
+            background: rgba(29, 211, 167, 0.1);
+            color: var(--success);
+        }
+        
+        /* Contact */
+        .contact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .contact-form {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+        }
+        
+        .contact-info {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--card);
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-column a {
+            color: var(--muted);
+            transition: color 0.2s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 14px;
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+            margin: 40px 0;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .product-detail, 
+            .checkout,
+            .contact {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            nav {
+                gap: 16px;
+            }
+            
+            .hero-content h2 {
+                font-size: 32px;
+            }
+            
+            .cta-row {
+                flex-direction: column;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .tracking-steps {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .tracking-steps::before {
+                display: none;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                gap: 16px;
+            }
+            
+            .step-icon {
+                margin: 0;
+                flex-shrink: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .viewer-container {
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">EC</div>
-        <div>
-          <h1>EyeCare Store</h1>
-          <p>Premium eyewear for clear vision and style</p>
-        </div>
-      </div>
-      <nav>
-        <a href="#shop">Shop</a>
-        <a href="#about">About</a>
-        <a href="#orders">My Orders</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo">EC</div>
+                <div>
+                    <h1>EyeCare Store</h1>
+                    <p>Premium eyewear for clear vision and style</p>
+                </div>
+            </div>
+            <nav>
+                <a href="#shop">Shop</a>
+                <a href="#orders">My Orders</a>
+                <a href="#contact">Contact</a>
+                <a href="#admin">Admin</a>
+            </nav>
+        </header>
 
-    <section class="hero">
-      <div class="hero-content">
-        <h2>Stylish frames. Clear vision.</h2>
-        <p>Discover our collection of premium eyewear designed for comfort, style, and optimal vision. From blue-light filtering to prescription lenses, we have the perfect pair for you.</p>
-        <div class="cta-row">
-          <a class="btn" href="#shop">Browse Collection</a>
-          <a class="btn ghost" href="#contact">Book an Eye Test</a>
-        </div>
-      </div>
-      <div class="hero-image">
-        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Stylish glasses collection">
-      </div>
-    </section>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Stylish frames. Clear vision.</h2>
+                <p>Discover our collection of premium eyewear designed for comfort, style, and optimal vision. From blue-light filtering to prescription lenses, we have the perfect pair for you.</p>
+                <div class="cta-row">
+                    <a class="btn" href="#shop">Browse Collection</a>
+                    <a class="btn ghost" href="#contact">Book an Eye Test</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Stylish glasses collection">
+            </div>
+        </section>
 
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon">✓</div>
-        <h3>Free Delivery</h3>
-        <p>Free shipping on all orders over Tsh 50,000 within Dar es Salaam</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">↻</div>
-        <h3>Easy Returns</h3>
-        <p>30-day return policy if you're not completely satisfied</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">👁️</div>
-        <h3>Eye Care Experts</h3>
-        <p>Consult with our certified optometrists for the perfect fit</p>
-      </div>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">✓</div>
+                <h3>Free Delivery</h3>
+                <p>Free shipping on all orders over Tsh 50,000 within Dar es Salaam</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">↻</div>
+                <h3>Easy Returns</h3>
+                <p>30-day return policy if you're not completely satisfied</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👁️</div>
+                <h3>Eye Care Experts</h3>
+                <p>Consult with our certified optometrists for the perfect fit</p>
+            </div>
+        </div>
+
+        <section id="shop">
+            <h2 class="section-title">Our Collection</h2>
+            <div class="grid">
+                <article class="card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Classic Rimless Glasses">
+                    </div>
+                    <div class="meta">
+                        <h3>Classic Rimless — BlueLight</h3>
+                        <div class="price">Tsh 85,000</div>
+                        <div class="description">Lightweight titanium, anti-glare coating</div>
+                        <div class="actions">
+                            <a class="btn" href="#product-1">View Details</a>
+                            <a class="btn ghost" href="#checkout">Add to Cart</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Polarized Sunglasses">
+                    </div>
+                    <div class="meta">
+                        <h3>Polarized SunShield</h3>
+                        <div class="price">Tsh 120,000</div>
+                        <div class="description">Polarized lenses, UV400 protection</div>
+                        <div class="actions">
+                            <a class="btn" href="#product-2">View Details</a>
+                            <a class="btn ghost" href="#checkout">Add to Cart</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Reading Glasses">
+                    </div>
+                    <div class="meta">
+                        <h3>Reading Pro — Lightweight</h3>
+                        <div class="price">Tsh 55,000</div>
+                        <div class="description">Multi-focus lenses for comfortable reading</div>
+                        <div class="actions">
+                            <a class="btn" href="#product-3">View Details</a>
+                            <a class="btn ghost" href="#checkout">Add to Cart</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Designer Frames">
+                    </div>
+                    <div class="meta">
+                        <h3>Designer Frames — Premium</h3>
+                        <div class="price">Tsh 145,000</div>
+                        <div class="description">Luxury frames with scratch-resistant lenses</div>
+                        <div class="actions">
+                            <a class="btn" href="#product-4">View Details</a>
+                            <a class="btn ghost" href="#checkout">Add to Cart</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="product-1" class="product-detail">
+            <div>
+                <div class="viewer-container">
+                    <div class="viewer-canvas" id="viewer-1">
+                        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Classic Rimless Glasses - Front View" id="main-image-1">
+                    </div>
+                </div>
+                <div class="viewer-controls">
+                    <button class="viewer-btn" id="rotate-left-1">↶</button>
+                    <button class="viewer-btn" id="rotate-right-1">↷</button>
+                    <button class="viewer-btn" id="zoom-in-1">+</button>
+                    <button class="viewer-btn" id="zoom-out-1">-</button>
+                    <button class="viewer-btn" id="reset-view-1">⟲</button>
+                </div>
+                <div class="viewer-thumbs">
+                    <div class="viewer-thumb active" data-image="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Front View">
+                    </div>
+                    <div class="viewer-thumb" data-image="https://images.unsplash.com/photo-1545033482-9e6c74d46d1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <img src="https://images.unsplash.com/photo-1545033482-9e6c74d46d1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Side View">
+                    </div>
+                    <div class="viewer-thumb" data-image="https://images.unsplash.com/photo-1570194065650-1d49aa6894aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <img src="https://images.unsplash.com/photo-1570194065650-1d49aa6894aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Top View">
+                    </div>
+                    <div class="viewer-thumb" data-image="https://images.unsplash.com/photo-1570194065650-1d49aa6894aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80&flip=h">
+                        <img src="https://images.unsplash.com/photo-1570194065650-1d49aa6894aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80&flip=h" alt="Back View">
+                    </div>
+                </div>
+            </div>
+            <div class="product-info">
+                <h1>Classic Rimless — BlueLight</h1>
+                <div class="product-price">Tsh 85,000</div>
+                <p>Experience ultimate comfort with our lightweight titanium frames featuring blue-light filtering technology to reduce digital eye strain.</p>
+                
+                <div class="specs">
+                    <h3>Product Details</h3>
+                    <ul>
+                        <li>Lightweight titanium frame</li>
+                        <li>Blue-light filter technology</li>
+                        <li>Anti-scratch and anti-glare coating</li>
+                        <li>Adjustable nose pads for perfect fit</li>
+                        <li>Available in multiple sizes</li>
+                    </ul>
+                </div>
+                
+                <form class="options-form" action="#checkout" method="get">
+                    <div class="form-group">
+                        <label for="lens">Lens Option</label>
+                        <select id="lens" name="lens">
+                            <option value="standard">Standard (no extra cost)</option>
+                            <option value="blue-light">Anti-blue Light (+Tsh 12,000)</option>
+                            <option value="progressive">Progressive (+Tsh 35,000)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qty">Quantity</label>
+                        <select id="qty" name="qty">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" type="submit">Add to Cart</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="checkout" class="checkout">
+            <div class="checkout-form">
+                <h2>Checkout</h2>
+                <form id="order-form" action="#order-placed" method="get">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Mwakyusa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="07xxxxxxxx" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Delivery Address</label>
+                        <input type="text" id="address" name="address" placeholder="Street address, area" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <select id="city" name="city">
+                            <option value="dar-es-salaam">Dar es Salaam</option>
+                            <option value="arusha">Arusha</option>
+                            <option value="mwanza">Mwanza</option>
+                            <option value="dodoma">Dodoma</option>
+                            <option value="mbeya">Mbeya</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment">Payment Method</label>
+                        <select id="payment" name="payment">
+                            <option value="cash">Cash on Delivery</option>
+                            <option value="card">Credit/Debit Card</option>
+                            <option value="mobile">Mobile Payment (Tigo Pesa, M-Pesa)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" type="submit">Place Order</button>
+                </form>
+            </div>
+            
+            <div class="checkout-summary">
+                <h3>Order Summary</h3>
+                
+                <div class="order-item">
+                    <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Classic Rimless">
+                    <div>
+                        <div><strong>Classic Rimless — BlueLight</strong></div>
+                        <div>Qty: 1</div>
+                        <div>Tsh 85,000</div>
+                    </div>
+                </div>
+                
+                <div class="order-total">
+                    Total: Tsh 85,000
+                </div>
+                
+                <div style="margin-top: 16px; font-size: 14px; color: var(--muted);">
+                    <p>Free delivery within Dar es Salaam for orders over Tsh 50,000</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="order-placed" class="tracking">
+            <h2 class="section-title">Order #<span id="order-number">EC000137</span></h2>
+            
+            <div class="tracking-steps">
+                <div class="step complete">
+                    <div class="step-icon">1</div>
+                    <div>
+                        <div class="step-label">Order Received</div>
+                        <div class="step-date" id="order-date">2025-10-03</div>
+                    </div>
+                </div>
+                
+                <div class="step" id="processing-step">
+                    <div class="step-icon">2</div>
+                    <div>
+                        <div class="step-label">Processing</div>
+                        <div class="step-date">—</div>
+                    </div>
+                </div>
+                
+                <div class="step" id="shipped-step">
+                    <div class="step-icon">3</div>
+                    <div>
+                        <div class="step-label">Shipped</div>
+                        <div class="step-date">—</div>
+                    </div>
+                </div>
+                
+                <div class="step" id="delivered-step">
+                    <div class="step-icon">4</div>
+                    <div>
+                        <div class="step-label">Delivered</div>
+                        <div class="step-date">—</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px;">
+                <div>
+                    <h3>Shipping Details</h3>
+                    <p id="shipping-details">
+                        <strong>John Mwakyusa</strong><br>
+                        07xxxxxxxx<br>
+                        Goba Road area, Dar es Salaam
+                    </p>
+                </div>
+                
+                <div>
+                    <h3>Order Details</h3>
+                    <p id="order-details">
+                        <strong>Items:</strong> 1 × Classic Rimless — BlueLight<br>
+                        <strong>Total:</strong> Tsh 85,000<br>
+                        <strong>Payment:</strong> Cash on Delivery
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="orders">
+            <h2 class="section-title">Your Orders</h2>
+            
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <tr>
+                        <td><a href="#order-placed">#EC000137</a></td>
+                        <td>2025-10-03</td>
+                        <td>Classic Rimless — BlueLight</td>
+                        <td><span class="status processing">Processing</span></td>
+                        <td>Tsh 85,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="admin" class="admin-panel">
+            <h2 class="section-title">Order Management</h2>
+            
+            <div class="admin-controls">
+                <button class="btn" id="process-order">Process Selected Order</button>
+                <button class="btn" id="ship-order">Mark as Shipped</button>
+                <button class="btn" id="deliver-order">Mark as Delivered</button>
+            </div>
+            
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-orders-table">
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order="EC000137"></td>
+                        <td>#EC000137</td>
+                        <td>John Mwakyusa</td>
+                        <td>Classic Rimless — BlueLight</td>
+                        <td><span class="status processing">Processing</span></td>
+                        <td>Tsh 85,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="contact-form">
+                <h2>Contact Us</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="contact-name">Your Name</label>
+                        <input type="text" id="contact-name" name="contact-name" placeholder="John Mwakyusa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email">Email Address</label>
+                        <input type="email" id="contact-email" name="contact-email" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-phone">Phone Number</label>
+                        <input type="tel" id="contact-phone" name="contact-phone" placeholder="07xxxxxxxx">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="How can we help you?"></textarea>
+                    </div>
+                    
+                    <button class="btn" type="submit">Send Message</button>
+                </form>
+            </div>
+            
+            <div class="contact-info">
+                <h2>Visit Our Store</h2>
+                <p><strong>EyeCare Store</strong><br>
+                Goba Road Area<br>
+                Dar es Salaam, Tanzania</p>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Phone:</strong> 07xxxxxxxx<br>
+                    <strong>Email:</strong> info@eyecare.co.tz</p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h3>Store Hours</h3>
+                    <p>Monday - Friday: 9:00 AM - 7:00 PM<br>
+                    Saturday: 9:00 AM - 5:00 PM<br>
+                    Sunday: 10:00 AM - 3:00 PM</p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h3>Book an Eye Test</h3>
+                    <p>Our certified optometrists are available for comprehensive eye examinations. Call to schedule an appointment.</p>
+                    <a class="btn" href="tel:07xxxxxxxx" style="margin-top: 10px;">Call to Book</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>EyeCare Store</h3>
+                    <p>Premium eyewear for clear vision and style. We're committed to providing quality glasses with excellent customer service.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#shop">All Glasses</a></li>
+                        <li><a href="#shop">Prescription Glasses</a></li>
+                        <li><a href="#shop">Sunglasses</a></li>
+                        <li><a href="#shop">Reading Glasses</a></li>
+                        <li><a href="#shop">Blue Light Glasses</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#orders">Order Tracking</a></li>
+                        <li><a href="#contact">Book Eye Test</a></li>
+                        <li><a href="#contact">Returns & Exchanges</a></li>
+                        <li><a href="#contact">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 EyeCare Store. All rights reserved.
+            </div>
+        </footer>
     </div>
 
-    <section id="shop">
-      <h2 class="section-title">Our Collection</h2>
-      <div class="grid">
-        <article class="card">
-          <div class="product-media">
-            <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Classic Rimless Glasses">
-          </div>
-          <div class="meta">
-            <h3>Classic Rimless — BlueLight</h3>
-            <div class="price">Tsh 85,000</div>
-            <div class="description">Lightweight titanium, anti-glare coating</div>
-            <div class="actions">
-              <a class="btn" href="#product-1">View Details</a>
-              <a class="btn ghost" href="#checkout">Add to Cart</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="product-media">
-            <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Polarized Sunglasses">
-          </div>
-          <div class="meta">
-            <h3>Polarized SunShield</h3>
-            <div class="price">Tsh 120,000</div>
-            <div class="description">Polarized lenses, UV400 protection</div>
-            <div class="actions">
-              <a class="btn" href="#product-2">View Details</a>
-              <a class="btn ghost" href="#checkout">Add to Cart</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="product-media">
-            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Reading Glasses">
-          </div>
-          <div class="meta">
-            <h3>Reading Pro — Lightweight</h3>
-            <div class="price">Tsh 55,000</div>
-            <div class="description">Multi-focus lenses for comfortable reading</div>
-            <div class="actions">
-              <a class="btn" href="#product-3">View Details</a>
-              <a class="btn ghost" href="#checkout">Add to Cart</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="product-media">
-            <img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Designer Frames">
-          </div>
-          <div class="meta">
-            <h3>Designer Frames — Premium</h3>
-            <div class="price">Tsh 145,000</div>
-            <div class="description">Luxury frames with scratch-resistant lenses</div>
-            <div class="actions">
-              <a class="btn" href="#product-4">View Details</a>
-              <a class="btn ghost" href="#checkout">Add to Cart</a>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="product-1" class="product-detail">
-      <div class="product-gallery">
-        <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Classic Rimless Glasses">
-      </div>
-      <div class="product-info">
-        <h1>Classic Rimless — BlueLight</h1>
-        <div class="product-price">Tsh 85,000</div>
-        <p>Experience ultimate comfort with our lightweight titanium frames featuring blue-light filtering technology to reduce digital eye strain.</p>
-        
-        <div class="specs">
-          <h3>Product Details</h3>
-          <ul>
-            <li>Lightweight titanium frame</li>
-            <li>Blue-light filter technology</li>
-            <li>Anti-scratch and anti-glare coating</li>
-            <li>Adjustable nose pads for perfect fit</li>
-            <li>Available in multiple sizes</li>
-          </ul>
-        </div>
-        
-        <form class="options-form" action="#checkout" method="get">
-          <div class="form-group">
-            <label for="lens">Lens Option</label>
-            <select id="lens" name="lens">
-              <option value="standard">Standard (no extra cost)</option>
-              <option value="blue-light">Anti-blue Light (+Tsh 12,000)</option>
-              <option value="progressive">Progressive (+Tsh 35,000)</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="qty">Quantity</label>
-            <select id="qty" name="qty">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </div>
-          
-          <button class="btn" type="submit">Add to Cart</button>
-        </form>
-      </div>
-    </section>
-
-    <section id="checkout" class="checkout">
-      <div class="checkout-form">
-        <h2>Checkout</h2>
-        <form action="#order-placed" method="get">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="John Mwakyusa" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="07xxxxxxxx" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="address">Delivery Address</label>
-            <input type="text" id="address" name="address" placeholder="Street address, area" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="city">City</label>
-            <select id="city" name="city">
-              <option value="dar-es-salaam">Dar es Salaam</option>
-              <option value="arusha">Arusha</option>
-              <option value="mwanza">Mwanza</option>
-              <option value="dodoma">Dodoma</option>
-              <option value="mbeya">Mbeya</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="payment">Payment Method</label>
-            <select id="payment" name="payment">
-              <option value="cash">Cash on Delivery</option>
-              <option value="card">Credit/Debit Card</option>
-              <option value="mobile">Mobile Payment (Tigo Pesa, M-Pesa)</option>
-            </select>
-          </div>
-          
-          <button class="btn" type="submit">Place Order</button>
-        </form>
-      </div>
-      
-      <div class="checkout-summary">
-        <h3>Order Summary</h3>
-        
-        <div class="order-item">
-          <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Classic Rimless">
-          <div>
-            <div><strong>Classic Rimless — BlueLight</strong></div>
-            <div>Qty: 1</div>
-            <div>Tsh 85,000</div>
-          </div>
-        </div>
-        
-        <div class="order-total">
-          Total: Tsh 85,000
-        </div>
-        
-        <div style="margin-top: 16px; font-size: 14px; color: var(--muted);">
-          <p>Free delivery within Dar es Salaam for orders over Tsh 50,000</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="order-placed" class="tracking">
-      <h2 class="section-title">Order #EC000137</h2>
-      
-      <div class="tracking-steps">
-        <div class="step complete">
-          <div class="step-icon">1</div>
-          <div>
-            <div class="step-label">Order Received</div>
-            <div class="step-date">2025-10-03</div>
-          </div>
-        </div>
-        
-        <div class="step active">
-          <div class="step-icon">2</div>
-          <div>
-            <div class="step-label">Processing</div>
-            <div class="step-date">Expected: 2025-10-04</div>
-          </div>
-        </div>
-        
-        <div class="step">
-          <div class="step-icon">3</div>
-          <div>
-            <div class="step-label">Shipped</div>
-            <div class="step-date">—</div>
-          </div>
-        </div>
-        
-        <div class="step">
-          <div class="step-icon">4</div>
-          <div>
-            <div class="step-label">Delivered</div>
-            <div class="step-date">—</div>
-          </div>
-        </div>
-      </div>
-      
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px;">
-        <div>
-          <h3>Shipping Details</h3>
-          <p><strong>John Mwakyusa</strong><br>
-          07xxxxxxxx<br>
-          Goba Road area, Dar es Salaam</p>
-        </div>
-        
-        <div>
-          <h3>Order Details</h3>
-          <p><strong>Items:</strong> 1 × Classic Rimless — BlueLight<br>
-          <strong>Total:</strong> Tsh 85,000<br>
-          <strong>Payment:</strong> Cash on Delivery</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="orders">
-      <h2 class="section-title">Your Orders</h2>
-      
-      <table class="orders-table">
-        <thead>
-          <tr>
-            <th>Order #</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Status</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="#order-placed">#EC000137</a></td>
-            <td>2025-10-03</td>
-            <td>Classic Rimless — BlueLight</td>
-            <td><span class="status processing">Processing</span></td>
-            <td>Tsh 85,000</td>
-          </tr>
-          <tr>
-            <td><a href="#order-placed">#EC000122</a></td>
-            <td>2025-09-20</td>
-            <td>Polarized SunShield</td>
-            <td><span class="status delivered">Delivered</span></td>
-            <td>Tsh 120,000</td>
-          </tr>
-          <tr>
-            <td><a href="#order-placed">#EC000098</a></td>
-            <td>2025-08-15</td>
-            <td>Reading Pro — Lightweight</td>
-            <td><span class="status delivered">Delivered</span></td>
-            <td>Tsh 55,000</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section id="contact" class="contact">
-      <div class="contact-form">
-        <h2>Contact Us</h2>
-        <form>
-          <div class="form-group">
-            <label for="contact-name">Your Name</label>
-            <input type="text" id="contact-name" name="contact-name" placeholder="John Mwakyusa" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="contact-email">Email Address</label>
-            <input type="email" id="contact-email" name="contact-email" placeholder="your.email@example.com" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="contact-phone">Phone Number</label>
-            <input type="tel" id="contact-phone" name="contact-phone" placeholder="07xxxxxxxx">
-          </div>
-          
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="How can we help you?"></textarea>
-          </div>
-          
-          <button class="btn" type="submit">Send Message</button>
-        </form>
-      </div>
-      
-      <div class="contact-info">
-        <h2>Visit Our Store</h2>
-        <p><strong>EyeCare Store</strong><br>
-        Goba Road Area<br>
-        Dar es Salaam, Tanzania</p>
-        
-        <div style="margin-top: 20px;">
-          <p><strong>Phone:</strong> 07xxxxxxxx<br>
-          <strong>Email:</strong> info@eyecare.co.tz</p>
-        </div>
-        
-        <div style="margin-top: 20px;">
-          <h3>Store Hours</h3>
-          <p>Monday - Friday: 9:00 AM - 7:00 PM<br>
-          Saturday: 9:00 AM - 5:00 PM<br>
-          Sunday: 10:00 AM - 3:00 PM</p>
-        </div>
-        
-        <div style="margin-top: 20px;">
-          <h3>Book an Eye Test</h3>
-          <p>Our certified optometrists are available for comprehensive eye examinations. Call to schedule an appointment.</p>
-          <a class="btn" href="tel:07xxxxxxxx" style="margin-top: 10px;">Call to Book</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column">
-          <h3>EyeCare Store</h3>
-          <p>Premium eyewear for clear vision and style. We're committed to providing quality glasses with excellent customer service.</p>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Shop</h3>
-          <ul>
-            <li><a href="#shop">All Glasses</a></li>
-            <li><a href="#shop">Prescription Glasses</a></li>
-            <li><a href="#shop">Sunglasses</a></li>
-            <li><a href="#shop">Reading Glasses</a></li>
-            <li><a href="#shop">Blue Light Glasses</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Customer Service</h3>
-          <ul>
-            <li><a href="#contact">Contact Us</a></li>
-            <li><a href="#orders">Order Tracking</a></li>
-            <li><a href="#contact">Book Eye Test</a></li>
-            <li><a href="#contact">Returns & Exchanges</a></li>
-            <li><a href="#contact">FAQ</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Connect With Us</h3>
-          <ul>
-            <li><a href="#">Facebook</a></li>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">YouTube</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="copyright">
-        &copy; 2025 EyeCare Store. All rights reserved.
-      </div>
-    </footer>
-  </div>
+    <script>
+        // Order Management System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate a random order number
+            function generateOrderNumber() {
+                const prefix = 'EC';
+                const randomNum = Math.floor(100000 + Math.random() * 900000);
+                return `${prefix}${randomNum}`;
+            }
+            
+            // Set current date
+            function getCurrentDate() {
+                const now = new Date();
+                return now.toISOString().split('T')[0];
+            }
+            
+            // Initialize order number and date
+            document.getElementById('order-number').textContent = generateOrderNumber();
+            document.getElementById('order-date').textContent = getCurrentDate();
+            
+            // 360° Viewer Functionality
+            function initializeViewer(viewerId) {
+                const mainImage = document.getElementById(`main-image-${viewerId}`);
+                const rotateLeftBtn = document.getElementById(`rotate-left-${viewerId}`);
+                const rotateRightBtn = document.getElementById(`rotate-right-${viewerId}`);
+                const zoomInBtn = document.getElementById(`zoom-in-${viewerId}`);
+                const zoomOutBtn = document.getElementById(`zoom-out-${viewerId}`);
+                const resetBtn = document.getElementById(`reset-view-${viewerId}`);
+                const thumbs = document.querySelectorAll(`#product-${viewerId} .viewer-thumb`);
+                
+                let rotation = 0;
+                let scale = 1;
+                
+                // Rotation functions
+                rotateLeftBtn.addEventListener('click', function() {
+                    rotation -= 15;
+                    updateTransform();
+                });
+                
+                rotateRightBtn.addEventListener('click', function() {
+                    rotation += 15;
+                    updateTransform();
+                });
+                
+                // Zoom functions
+                zoomInBtn.addEventListener('click', function() {
+                    scale += 0.1;
+                    updateTransform();
+                });
+                
+                zoomOutBtn.addEventListener('click', function() {
+                    scale = Math.max(0.5, scale - 0.1);
+                    updateTransform();
+                });
+                
+                // Reset function
+                resetBtn.addEventListener('click', function() {
+                    rotation = 0;
+                    scale = 1;
+                    updateTransform();
+                });
+                
+                // Thumbnail click handlers
+                thumbs.forEach(thumb => {
+                    thumb.addEventListener('click', function() {
+                        // Remove active class from all thumbs
+                        thumbs.forEach(t => t.classList.remove('active'));
+                        
+                        // Add active class to clicked thumb
+                        this.classList.add('active');
+                        
+                        // Change main image
+                        const newImageSrc = this.getAttribute('data-image');
+                        mainImage.src = newImageSrc;
+                        
+                        // Reset rotation and scale
+                        rotation = 0;
+                        scale = 1;
+                        updateTransform();
+                    });
+                });
+                
+                // Update CSS transform
+                function updateTransform() {
+                    mainImage.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                }
+            }
+            
+            // Initialize viewer for product 1
+            initializeViewer('1');
+            
+            // Order form submission
+            document.getElementById('order-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+                const city = document.getElementById('city').value;
+                
+                // Update order details
+                document.getElementById('shipping-details').innerHTML = `
+                    <strong>${name}</strong><br>
+                    ${phone}<br>
+                    ${address}, ${city}
+                `;
+                
+                // Generate new order number
+                const newOrderNumber = generateOrderNumber();
+                document.getElementById('order-number').textContent = newOrderNumber;
+                
+                // Update order date
+                document.getElementById('order-date').textContent = getCurrentDate();
+                
+                // Reset tracking steps
+                document.getElementById('processing-step').classList.remove('complete', 'active');
+                document.getElementById('shipped-step').classList.remove('complete', 'active');
+                document.getElementById('delivered-step').classList.remove('complete', 'active');
+                
+                // Add to orders table
+                const ordersTable = document.getElementById('orders-table-body');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><a href="#order-placed">#${newOrderNumber}</a></td>
+                    <td>${getCurrentDate()}</td>
+                    <td>Classic Rimless — BlueLight</td>
+                    <td><span class="status processing">Processing</span></td>
+                    <td>Tsh 85,000</td>
+                `;
+                ordersTable.appendChild(newRow);
+                
+                // Add to admin orders table
+                const adminOrdersTable = document.getElementById('admin-orders-table');
+                const newAdminRow = document.createElement('tr');
+                newAdminRow.innerHTML = `
+                    <td><input type="checkbox" class="order-checkbox" data-order="${newOrderNumber}"></td>
+                    <td>#${newOrderNumber}</td>
+                    <td>${name}</td>
+                    <td>Classic Rimless — BlueLight</td>
+                    <td><span class="status processing">Processing</span></td>
+                    <td>Tsh 85,000</td>
+                `;
+                adminOrdersTable.appendChild(newAdminRow);
+                
+                // Scroll to order tracking
+                window.location.href = '#order-placed';
+            });
+            
+            // Admin order management
+            document.getElementById('process-order').addEventListener('click', function() {
+                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
+                
+                selectedOrders.forEach(checkbox => {
+                    const orderNumber = checkbox.getAttribute('data-order');
+                    
+                    // Update order status in admin table
+                    const row = checkbox.closest('tr');
+                    const statusCell = row.querySelector('.status');
+                    statusCell.textContent = 'Processing';
+                    statusCell.className = 'status processing';
+                    
+                    // Update tracking if this is the current order
+                    if (orderNumber === document.getElementById('order-number').textContent) {
+                        document.getElementById('processing-step').classList.add('complete');
+                        document.getElementById('shipped-step').classList.add('active');
+                    }
+                });
+            });
+            
+            document.getElementById('ship-order').addEventListener('click', function() {
+                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
+                
+                selectedOrders.forEach(checkbox => {
+                    const orderNumber = checkbox.getAttribute('data-order');
+                    
+                    // Update order status in admin table
+                    const row = checkbox.closest('tr');
+                    const statusCell = row.querySelector('.status');
+                    statusCell.textContent = 'Shipped';
+                    statusCell.className = 'status shipped';
+                    
+                    // Update tracking if this is the current order
+                    if (orderNumber === document.getElementById('order-number').textContent) {
+                        document.getElementById('processing-step').classList.add('complete');
+                        document.getElementById('shipped-step').classList.add('complete');
+                        document.getElementById('delivered-step').classList.add('active');
+                    }
+                });
+            });
+            
+            document.getElementById('deliver-order').addEventListener('click', function() {
+                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
+                
+                selectedOrders.forEach(checkbox => {
+                    const orderNumber = checkbox.getAttribute('data-order');
+                    
+                    // Update order status in admin table
+                    const row = checkbox.closest('tr');
+                    const statusCell = row.querySelector('.status');
+                    statusCell.textContent = 'Delivered';
+                    statusCell.className = 'status delivered';
+                    
+                    // Update tracking if this is the current order
+                    if (orderNumber === document.getElementById('order-number').textContent) {
+                        document.getElementById('processing-step').classList.add('complete');
+                        document.getElementById('shipped-step').classList.add('complete');
+                        document.getElementById('delivered-step').classList.add('complete');
+                    }
+                });
+            });
+            
+            // Select all checkbox
+            document.getElementById('select-all').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.order-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
