@@ -582,6 +582,27 @@
             margin-top: 4px;
         }
         
+        /* Delivery Confirmation */
+        .delivery-confirmation {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
+            margin: 30px 0;
+            text-align: center;
+            border-left: 4px solid var(--success);
+        }
+        
+        .delivery-confirmation h3 {
+            color: var(--success);
+            margin-bottom: 12px;
+        }
+        
+        .delivery-confirmation p {
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+        
         /* Orders List */
         .orders-table {
             width: 100%;
@@ -835,6 +856,7 @@
                 <a href="#shop">Shop</a>
                 <a href="#orders">My Orders</a>
                 <a href="#contact">Contact</a>
+                <a href="admin.html" target="_blank" style="color: #ff6b6b;">Admin</a>
             </nav>
         </header>
 
@@ -1149,10 +1171,20 @@
                 </div>
             </div>
             
-            <div id="delivery-confirmation" style="margin-top: 30px; display: none;">
-                <h3>Delivery Confirmation</h3>
-                <p>Has your order been delivered? Please confirm delivery to complete your order.</p>
-                <button class="btn success" id="confirm-delivery-btn">Confirm Delivery</button>
+            <!-- DELIVERY CONFIRMATION SECTION -->
+            <div class="delivery-confirmation" id="delivery-confirmation-section" style="display: none;">
+                <h3>📦 Package Delivered?</h3>
+                <p>Your order has been marked as shipped. Please confirm when you receive your package to complete the order process.</p>
+                <button class="btn success" id="confirm-delivery-btn">✅ Confirm I Received My Order</button>
+            </div>
+            
+            <!-- DELIVERY CONFIRMED MESSAGE -->
+            <div class="delivery-confirmation" id="delivery-confirmed-section" style="display: none; background: #f0f9ff; border-left-color: var(--accent);">
+                <h3>🎉 Order Completed!</h3>
+                <p>Thank you for confirming your delivery! We hope you enjoy your new glasses.</p>
+                <div style="margin-top: 15px;">
+                    <a href="#shop" class="btn">Continue Shopping</a>
+                </div>
             </div>
         </section>
 
@@ -1167,6 +1199,7 @@
                         <th>Items</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="orders-table-body">
@@ -1430,7 +1463,8 @@
                         processing: null,
                         shipped: null,
                         delivered: null
-                    }
+                    },
+                    deliveryConfirmed: false
                 };
                 
                 // Add to orders
@@ -1482,6 +1516,9 @@
                 
                 // Update tracking steps
                 updateTrackingSteps(order);
+                
+                // Show/hide delivery confirmation
+                updateDeliveryConfirmation(order);
             }
             
             // Update tracking steps based on order status
@@ -1520,9 +1557,26 @@
                     document.getElementById('shipped-step').classList.add('active');
                 } else if (!order.tracking.delivered) {
                     document.getElementById('delivered-step').classList.add('active');
-                    document.getElementById('delivery-confirmation').style.display = 'block';
+                }
+            }
+            
+            // Update delivery confirmation section
+            function updateDeliveryConfirmation(order) {
+                const deliverySection = document.getElementById('delivery-confirmation-section');
+                const confirmedSection = document.getElementById('delivery-confirmed-section');
+                
+                if (order.tracking.shipped && !order.tracking.delivered) {
+                    // Show delivery confirmation button
+                    deliverySection.style.display = 'block';
+                    confirmedSection.style.display = 'none';
+                } else if (order.tracking.delivered) {
+                    // Show delivery confirmed message
+                    deliverySection.style.display = 'none';
+                    confirmedSection.style.display = 'block';
                 } else {
-                    document.getElementById('delivery-confirmation').style.display = 'none';
+                    // Hide both
+                    deliverySection.style.display = 'none';
+                    confirmedSection.style.display = 'none';
                 }
             }
             
@@ -1533,14 +1587,34 @@
                 
                 orders.forEach(order => {
                     const row = document.createElement('tr');
+                    
+                    // Create action button based on status
+                    let actionButton = '';
+                    if (order.tracking.shipped && !order.tracking.delivered) {
+                        actionButton = `<button class="btn success confirm-order-btn" data-order="${order.id}" style="padding: 6px 12px; font-size: 12px;">Confirm Delivery</button>`;
+                    } else if (order.tracking.delivered) {
+                        actionButton = '<span style="color: var(--success);">✅ Delivered</span>';
+                    } else {
+                        actionButton = '<span style="color: var(--muted);">Waiting...</span>';
+                    }
+                    
                     row.innerHTML = `
                         <td><a href="#order-placed" onclick="loadOrder('${order.id}')">#${order.id}</a></td>
                         <td>${order.date}</td>
                         <td>${order.items.map(item => item.name).join(', ')}</td>
                         <td><span class="status ${order.status}">${order.status}</span></td>
                         <td>Tsh ${order.total.toLocaleString()}</td>
+                        <td>${actionButton}</td>
                     `;
                     tableBody.appendChild(row);
+                });
+                
+                // Add event listeners to confirm buttons
+                document.querySelectorAll('.confirm-order-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const orderId = this.getAttribute('data-order');
+                        confirmDelivery(orderId);
+                    });
                 });
             }
             
@@ -1554,11 +1628,37 @@
             };
             
             // Confirm delivery
+            function confirmDelivery(orderId) {
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    const order = orders[orderIndex];
+                    
+                    // Update order status
+                    order.tracking.delivered = getCurrentDate();
+                    order.status = 'delivered';
+                    order.deliveryConfirmed = true;
+                    
+                    orders[orderIndex] = order;
+                    localStorage.setItem('customerOrders', JSON.stringify(orders));
+                    
+                    // Update admin orders as well
+                    updateAdminOrders(order);
+                    
+                    // Update UI
+                    if (currentOrder && currentOrder.id === orderId) {
+                        updateOrderTracking(order);
+                    }
+                    
+                    updateOrdersTable();
+                    
+                    showNotification(`Delivery confirmed for order #${orderId}! Thank you!`);
+                }
+            }
+            
+            // Confirm delivery button handler
             document.getElementById('confirm-delivery-btn').addEventListener('click', function() {
                 if (currentOrder) {
-                    updateOrderStatus(currentOrder.id, 'delivered');
-                    showNotification(`Delivery confirmed for order #${currentOrder.id}!`);
-                    document.getElementById('delivery-confirmation').style.display = 'none';
+                    confirmDelivery(currentOrder.id);
                 }
             });
             
@@ -1599,10 +1699,19 @@
                 }
             }
             
+            // Update admin orders with customer changes
+            function updateAdminOrders(updatedOrder) {
+                const adminOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
+                const orderIndex = adminOrders.findIndex(o => o.id === updatedOrder.id);
+                
+                if (orderIndex !== -1) {
+                    adminOrders[orderIndex] = { ...adminOrders[orderIndex], ...updatedOrder };
+                    localStorage.setItem('adminOrders', JSON.stringify(adminOrders));
+                }
+            }
+            
             // Check for status updates from admin
             function checkForUpdates() {
-                // In a real app, this would be a WebSocket or API call
-                // For this demo, we'll simulate checking for updates
                 const adminOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
                 
                 orders.forEach((order, index) => {
