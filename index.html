@@ -16,6 +16,7 @@
             --border: #e4e7ec;
             --success: #1dd3a7;
             --warning: #f59e0b;
+            --error: #ef4444;
         }
         
         * {
@@ -159,6 +160,14 @@
         
         .btn.ghost:hover {
             background: rgba(11, 120, 209, 0.05);
+        }
+        
+        .btn.success {
+            background: var(--success);
+        }
+        
+        .btn.success:hover {
+            background: #17b896;
         }
         
         .hero-image {
@@ -481,6 +490,37 @@
             color: var(--accent);
         }
         
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--accent);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--accent);
+            background: rgba(11, 120, 209, 0.05);
+        }
+        
+        .payment-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
         /* Order Tracking */
         .tracking {
             margin: 40px 0;
@@ -568,14 +608,19 @@
             font-weight: 600;
         }
         
+        .status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
         .status.processing {
             background: rgba(11, 120, 209, 0.1);
             color: var(--accent);
         }
         
         .status.shipped {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
         }
         
         .status.delivered {
@@ -660,19 +705,31 @@
             font-size: 14px;
         }
         
-        /* Admin Panel */
-        .admin-panel {
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 8px;
             background: var(--card);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(12, 20, 40, 0.04);
-            margin: 40px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
         }
         
-        .admin-controls {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left-color: var(--success);
+        }
+        
+        .notification.error {
+            border-left-color: var(--error);
         }
         
         /* Responsive */
@@ -694,6 +751,10 @@
             
             .footer-content {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -774,7 +835,6 @@
                 <a href="#shop">Shop</a>
                 <a href="#orders">My Orders</a>
                 <a href="#contact">Contact</a>
-                <a href="#admin">Admin</a>
             </nav>
         </header>
 
@@ -947,7 +1007,7 @@
         <section id="checkout" class="checkout">
             <div class="checkout-form">
                 <h2>Checkout</h2>
-                <form id="order-form" action="#order-placed" method="get">
+                <form id="order-form">
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" placeholder="John Mwakyusa" required>
@@ -980,15 +1040,25 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="payment">Payment Method</label>
-                        <select id="payment" name="payment">
-                            <option value="cash">Cash on Delivery</option>
-                            <option value="card">Credit/Debit Card</option>
-                            <option value="mobile">Mobile Payment (Tigo Pesa, M-Pesa)</option>
-                        </select>
+                        <label>Payment Method</label>
+                        <div class="payment-methods">
+                            <div class="payment-method" data-method="cash">
+                                <div class="payment-icon">💵</div>
+                                <div>Cash on Delivery</div>
+                            </div>
+                            <div class="payment-method" data-method="card">
+                                <div class="payment-icon">💳</div>
+                                <div>Credit/Debit Card</div>
+                            </div>
+                            <div class="payment-method" data-method="mobile">
+                                <div class="payment-icon">📱</div>
+                                <div>Mobile Payment</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="payment" name="payment" required>
                     </div>
                     
-                    <button class="btn" type="submit">Place Order</button>
+                    <button class="btn" type="submit" id="place-order-btn">Place Order & Pay</button>
                 </form>
             </div>
             
@@ -1018,7 +1088,7 @@
             <h2 class="section-title">Order #<span id="order-number">EC000137</span></h2>
             
             <div class="tracking-steps">
-                <div class="step complete">
+                <div class="step complete" id="order-received-step">
                     <div class="step-icon">1</div>
                     <div>
                         <div class="step-label">Order Received</div>
@@ -1026,8 +1096,16 @@
                     </div>
                 </div>
                 
-                <div class="step" id="processing-step">
+                <div class="step" id="payment-step">
                     <div class="step-icon">2</div>
+                    <div>
+                        <div class="step-label">Payment Confirmed</div>
+                        <div class="step-date">—</div>
+                    </div>
+                </div>
+                
+                <div class="step" id="processing-step">
+                    <div class="step-icon">3</div>
                     <div>
                         <div class="step-label">Processing</div>
                         <div class="step-date">—</div>
@@ -1035,7 +1113,7 @@
                 </div>
                 
                 <div class="step" id="shipped-step">
-                    <div class="step-icon">3</div>
+                    <div class="step-icon">4</div>
                     <div>
                         <div class="step-label">Shipped</div>
                         <div class="step-date">—</div>
@@ -1043,7 +1121,7 @@
                 </div>
                 
                 <div class="step" id="delivered-step">
-                    <div class="step-icon">4</div>
+                    <div class="step-icon">5</div>
                     <div>
                         <div class="step-label">Delivered</div>
                         <div class="step-date">—</div>
@@ -1070,6 +1148,12 @@
                     </p>
                 </div>
             </div>
+            
+            <div id="delivery-confirmation" style="margin-top: 30px; display: none;">
+                <h3>Delivery Confirmation</h3>
+                <p>Has your order been delivered? Please confirm delivery to complete your order.</p>
+                <button class="btn success" id="confirm-delivery-btn">Confirm Delivery</button>
+            </div>
         </section>
 
         <section id="orders">
@@ -1086,46 +1170,7 @@
                     </tr>
                 </thead>
                 <tbody id="orders-table-body">
-                    <tr>
-                        <td><a href="#order-placed">#EC000137</a></td>
-                        <td>2025-10-03</td>
-                        <td>Classic Rimless — BlueLight</td>
-                        <td><span class="status processing">Processing</span></td>
-                        <td>Tsh 85,000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section id="admin" class="admin-panel">
-            <h2 class="section-title">Order Management</h2>
-            
-            <div class="admin-controls">
-                <button class="btn" id="process-order">Process Selected Order</button>
-                <button class="btn" id="ship-order">Mark as Shipped</button>
-                <button class="btn" id="deliver-order">Mark as Delivered</button>
-            </div>
-            
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all"></th>
-                        <th>Order #</th>
-                        <th>Customer</th>
-                        <th>Items</th>
-                        <th>Status</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-orders-table">
-                    <tr>
-                        <td><input type="checkbox" class="order-checkbox" data-order="EC000137"></td>
-                        <td>#EC000137</td>
-                        <td>John Mwakyusa</td>
-                        <td>Classic Rimless — BlueLight</td>
-                        <td><span class="status processing">Processing</span></td>
-                        <td>Tsh 85,000</td>
-                    </tr>
+                    <!-- Orders will be populated here -->
                 </tbody>
             </table>
         </section>
@@ -1230,9 +1275,18 @@
         </footer>
     </div>
 
+    <!-- Notification Element -->
+    <div class="notification" id="notification">
+        <div id="notification-message">Order placed successfully!</div>
+    </div>
+
     <script>
         // Order Management System
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize orders from localStorage or empty array
+            let orders = JSON.parse(localStorage.getItem('customerOrders')) || [];
+            let currentOrder = null;
+            
             // Generate a random order number
             function generateOrderNumber() {
                 const prefix = 'EC';
@@ -1246,9 +1300,19 @@
                 return now.toISOString().split('T')[0];
             }
             
-            // Initialize order number and date
-            document.getElementById('order-number').textContent = generateOrderNumber();
-            document.getElementById('order-date').textContent = getCurrentDate();
+            // Show notification
+            function showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                const messageEl = document.getElementById('notification-message');
+                
+                messageEl.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000);
+            }
             
             // 360° Viewer Functionality
             function initializeViewer(viewerId) {
@@ -1321,6 +1385,16 @@
             // Initialize viewer for product 1
             initializeViewer('1');
             
+            // Payment method selection
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('payment').value = this.getAttribute('data-method');
+                });
+            });
+            
             // Order form submission
             document.getElementById('order-form').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -1328,127 +1402,241 @@
                 // Get form data
                 const name = document.getElementById('name').value;
                 const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
                 const address = document.getElementById('address').value;
                 const city = document.getElementById('city').value;
+                const paymentMethod = document.getElementById('payment').value;
                 
-                // Update order details
-                document.getElementById('shipping-details').innerHTML = `
-                    <strong>${name}</strong><br>
-                    ${phone}<br>
-                    ${address}, ${city}
-                `;
+                if (!paymentMethod) {
+                    showNotification('Please select a payment method', 'error');
+                    return;
+                }
                 
-                // Generate new order number
+                // Generate new order
                 const newOrderNumber = generateOrderNumber();
-                document.getElementById('order-number').textContent = newOrderNumber;
+                const orderDate = getCurrentDate();
                 
-                // Update order date
-                document.getElementById('order-date').textContent = getCurrentDate();
+                const newOrder = {
+                    id: newOrderNumber,
+                    date: orderDate,
+                    customer: { name, phone, email, address, city },
+                    items: [{ name: 'Classic Rimless — BlueLight', quantity: 1, price: 85000 }],
+                    total: 85000,
+                    paymentMethod: paymentMethod,
+                    status: 'pending',
+                    tracking: {
+                        orderReceived: orderDate,
+                        paymentConfirmed: null,
+                        processing: null,
+                        shipped: null,
+                        delivered: null
+                    }
+                };
                 
-                // Reset tracking steps
-                document.getElementById('processing-step').classList.remove('complete', 'active');
-                document.getElementById('shipped-step').classList.remove('complete', 'active');
-                document.getElementById('delivered-step').classList.remove('complete', 'active');
+                // Add to orders
+                orders.push(newOrder);
+                localStorage.setItem('customerOrders', JSON.stringify(orders));
                 
-                // Add to orders table
-                const ordersTable = document.getElementById('orders-table-body');
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td><a href="#order-placed">#${newOrderNumber}</a></td>
-                    <td>${getCurrentDate()}</td>
-                    <td>Classic Rimless — BlueLight</td>
-                    <td><span class="status processing">Processing</span></td>
-                    <td>Tsh 85,000</td>
-                `;
-                ordersTable.appendChild(newRow);
+                // Update current order
+                currentOrder = newOrder;
                 
-                // Add to admin orders table
-                const adminOrdersTable = document.getElementById('admin-orders-table');
-                const newAdminRow = document.createElement('tr');
-                newAdminRow.innerHTML = `
-                    <td><input type="checkbox" class="order-checkbox" data-order="${newOrderNumber}"></td>
-                    <td>#${newOrderNumber}</td>
-                    <td>${name}</td>
-                    <td>Classic Rimless — BlueLight</td>
-                    <td><span class="status processing">Processing</span></td>
-                    <td>Tsh 85,000</td>
-                `;
-                adminOrdersTable.appendChild(newAdminRow);
+                // Update UI
+                updateOrderTracking(newOrder);
+                updateOrdersTable();
+                
+                // Show success message
+                showNotification(`Order #${newOrderNumber} placed successfully!`);
+                
+                // Simulate payment processing
+                setTimeout(() => {
+                    if (paymentMethod !== 'cash') {
+                        // For card/mobile payments, simulate payment confirmation
+                        updateOrderStatus(newOrderNumber, 'paymentConfirmed');
+                        showNotification(`Payment for order #${newOrderNumber} confirmed!`);
+                    }
+                }, 2000);
                 
                 // Scroll to order tracking
                 window.location.href = '#order-placed';
             });
             
-            // Admin order management
-            document.getElementById('process-order').addEventListener('click', function() {
-                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
+            // Update order tracking display
+            function updateOrderTracking(order) {
+                document.getElementById('order-number').textContent = order.id;
+                document.getElementById('order-date').textContent = order.tracking.orderReceived;
                 
-                selectedOrders.forEach(checkbox => {
-                    const orderNumber = checkbox.getAttribute('data-order');
+                // Update shipping details
+                document.getElementById('shipping-details').innerHTML = `
+                    <strong>${order.customer.name}</strong><br>
+                    ${order.customer.phone}<br>
+                    ${order.customer.address}, ${order.customer.city}
+                `;
+                
+                // Update order details
+                document.getElementById('order-details').innerHTML = `
+                    <strong>Items:</strong> ${order.items.map(item => `${item.quantity} × ${item.name}`).join(', ')}<br>
+                    <strong>Total:</strong> Tsh ${order.total.toLocaleString()}<br>
+                    <strong>Payment:</strong> ${order.paymentMethod === 'cash' ? 'Cash on Delivery' : 
+                                              order.paymentMethod === 'card' ? 'Credit/Debit Card' : 'Mobile Payment'}
+                `;
+                
+                // Update tracking steps
+                updateTrackingSteps(order);
+            }
+            
+            // Update tracking steps based on order status
+            function updateTrackingSteps(order) {
+                const steps = {
+                    'order-received-step': order.tracking.orderReceived,
+                    'payment-step': order.tracking.paymentConfirmed,
+                    'processing-step': order.tracking.processing,
+                    'shipped-step': order.tracking.shipped,
+                    'delivered-step': order.tracking.delivered
+                };
+                
+                for (const [stepId, date] of Object.entries(steps)) {
+                    const stepElement = document.getElementById(stepId);
+                    const dateElement = stepElement.querySelector('.step-date');
                     
-                    // Update order status in admin table
-                    const row = checkbox.closest('tr');
-                    const statusCell = row.querySelector('.status');
-                    statusCell.textContent = 'Processing';
-                    statusCell.className = 'status processing';
-                    
-                    // Update tracking if this is the current order
-                    if (orderNumber === document.getElementById('order-number').textContent) {
-                        document.getElementById('processing-step').classList.add('complete');
-                        document.getElementById('shipped-step').classList.add('active');
+                    if (date) {
+                        stepElement.classList.add('complete');
+                        dateElement.textContent = date;
+                    } else if (stepId === 'payment-step' && order.paymentMethod === 'cash') {
+                        // For cash on delivery, payment is confirmed when order is received
+                        stepElement.classList.add('complete');
+                        dateElement.textContent = order.tracking.orderReceived;
+                    } else {
+                        stepElement.classList.remove('complete', 'active');
+                        dateElement.textContent = '—';
                     }
+                }
+                
+                // Set active step
+                if (!order.tracking.paymentConfirmed && order.paymentMethod !== 'cash') {
+                    document.getElementById('payment-step').classList.add('active');
+                } else if (!order.tracking.processing) {
+                    document.getElementById('processing-step').classList.add('active');
+                } else if (!order.tracking.shipped) {
+                    document.getElementById('shipped-step').classList.add('active');
+                } else if (!order.tracking.delivered) {
+                    document.getElementById('delivered-step').classList.add('active');
+                    document.getElementById('delivery-confirmation').style.display = 'block';
+                } else {
+                    document.getElementById('delivery-confirmation').style.display = 'none';
+                }
+            }
+            
+            // Update orders table
+            function updateOrdersTable() {
+                const tableBody = document.getElementById('orders-table-body');
+                tableBody.innerHTML = '';
+                
+                orders.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><a href="#order-placed" onclick="loadOrder('${order.id}')">#${order.id}</a></td>
+                        <td>${order.date}</td>
+                        <td>${order.items.map(item => item.name).join(', ')}</td>
+                        <td><span class="status ${order.status}">${order.status}</span></td>
+                        <td>Tsh ${order.total.toLocaleString()}</td>
+                    `;
+                    tableBody.appendChild(row);
                 });
+            }
+            
+            // Load specific order
+            window.loadOrder = function(orderId) {
+                const order = orders.find(o => o.id === orderId);
+                if (order) {
+                    currentOrder = order;
+                    updateOrderTracking(order);
+                }
+            };
+            
+            // Confirm delivery
+            document.getElementById('confirm-delivery-btn').addEventListener('click', function() {
+                if (currentOrder) {
+                    updateOrderStatus(currentOrder.id, 'delivered');
+                    showNotification(`Delivery confirmed for order #${currentOrder.id}!`);
+                    document.getElementById('delivery-confirmation').style.display = 'none';
+                }
             });
             
-            document.getElementById('ship-order').addEventListener('click', function() {
-                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
+            // Update order status
+            function updateOrderStatus(orderId, status) {
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    const order = orders[orderIndex];
+                    
+                    switch (status) {
+                        case 'paymentConfirmed':
+                            order.tracking.paymentConfirmed = getCurrentDate();
+                            order.status = 'processing';
+                            break;
+                        case 'processing':
+                            order.tracking.processing = getCurrentDate();
+                            order.status = 'processing';
+                            break;
+                        case 'shipped':
+                            order.tracking.shipped = getCurrentDate();
+                            order.status = 'shipped';
+                            break;
+                        case 'delivered':
+                            order.tracking.delivered = getCurrentDate();
+                            order.status = 'delivered';
+                            break;
+                    }
+                    
+                    orders[orderIndex] = order;
+                    localStorage.setItem('customerOrders', JSON.stringify(orders));
+                    
+                    // Update UI if this is the current order
+                    if (currentOrder && currentOrder.id === orderId) {
+                        updateOrderTracking(order);
+                    }
+                    
+                    updateOrdersTable();
+                }
+            }
+            
+            // Check for status updates from admin
+            function checkForUpdates() {
+                // In a real app, this would be a WebSocket or API call
+                // For this demo, we'll simulate checking for updates
+                const adminOrders = JSON.parse(localStorage.getItem('adminOrders')) || [];
                 
-                selectedOrders.forEach(checkbox => {
-                    const orderNumber = checkbox.getAttribute('data-order');
-                    
-                    // Update order status in admin table
-                    const row = checkbox.closest('tr');
-                    const statusCell = row.querySelector('.status');
-                    statusCell.textContent = 'Shipped';
-                    statusCell.className = 'status shipped';
-                    
-                    // Update tracking if this is the current order
-                    if (orderNumber === document.getElementById('order-number').textContent) {
-                        document.getElementById('processing-step').classList.add('complete');
-                        document.getElementById('shipped-step').classList.add('complete');
-                        document.getElementById('delivered-step').classList.add('active');
+                orders.forEach((order, index) => {
+                    const adminOrder = adminOrders.find(o => o.id === order.id);
+                    if (adminOrder && adminOrder.status !== order.status) {
+                        // Status has been updated by admin
+                        orders[index] = { ...order, ...adminOrder };
+                        
+                        // Update UI if this is the current order
+                        if (currentOrder && currentOrder.id === order.id) {
+                            updateOrderTracking(orders[index]);
+                        }
                     }
                 });
-            });
-            
-            document.getElementById('deliver-order').addEventListener('click', function() {
-                const selectedOrders = document.querySelectorAll('.order-checkbox:checked');
                 
-                selectedOrders.forEach(checkbox => {
-                    const orderNumber = checkbox.getAttribute('data-order');
-                    
-                    // Update order status in admin table
-                    const row = checkbox.closest('tr');
-                    const statusCell = row.querySelector('.status');
-                    statusCell.textContent = 'Delivered';
-                    statusCell.className = 'status delivered';
-                    
-                    // Update tracking if this is the current order
-                    if (orderNumber === document.getElementById('order-number').textContent) {
-                        document.getElementById('processing-step').classList.add('complete');
-                        document.getElementById('shipped-step').classList.add('complete');
-                        document.getElementById('delivered-step').classList.add('complete');
-                    }
-                });
-            });
+                localStorage.setItem('customerOrders', JSON.stringify(orders));
+                updateOrdersTable();
+            }
             
-            // Select all checkbox
-            document.getElementById('select-all').addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.order-checkbox');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
+            // Initialize the page
+            function init() {
+                updateOrdersTable();
+                
+                // Check for updates every 5 seconds
+                setInterval(checkForUpdates, 5000);
+                
+                // Load the first order if available
+                if (orders.length > 0) {
+                    currentOrder = orders[0];
+                    updateOrderTracking(currentOrder);
+                }
+            }
+            
+            init();
         });
     </script>
 </body>
